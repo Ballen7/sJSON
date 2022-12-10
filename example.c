@@ -2,7 +2,7 @@
 
 int main(void) {
   sjson_retval_t ret;
-  uint8_t buffer[1024];
+  uint8_t buffer[256];
   sjson_context_t ctx;
 
   uint8_t *key = "my_key";
