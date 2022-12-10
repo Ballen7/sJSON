@@ -32,11 +32,11 @@ typedef enum {
 
 typedef enum {
   SJSON_8BIT_INT = 0,
-  SJSON_16BIT_INT,
-  SJSON_32BIT_INT,
-  SJSON_64BIT_INT,
+  SJSON_16BIT_INT = 1,
+  SJSON_32BIT_INT = 2,
+  SJSON_64BIT_INT = 3,
 
-  SJSON_INT_MAX_INDEX
+  SJSON_INT_MAX_INDEX = 4
 } sjson_integer_size_t;
 
 typedef enum {

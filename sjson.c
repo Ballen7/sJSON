@@ -24,9 +24,6 @@ static sjson_retval_t sjson_add_key(sjson_context_t *ctx, uint8_t *key,
   return (space_used >= vacancy) ? JSON_ERROR : JSON_SUCCESS;
 }
 
-static sjson_retval_t (*sjson_add_value[SJSON_INT_MAX_INDEX])(
-    sjson_context_t *ctx, void *value);
-
 static sjson_retval_t int8_handler(sjson_context_t *ctx, void *value) {
   size_t vacancy;
   int space_used;
@@ -67,12 +64,9 @@ static sjson_retval_t int64_handler(sjson_context_t *ctx, void *value) {
   return (space_used >= vacancy) ? JSON_ERROR : JSON_SUCCESS;
 }
 
-static inline uint8_t init_sjson_add_value(void) {
-  sjson_add_value[SJSON_8BIT_INT] = int8_handler;
-  sjson_add_value[SJSON_16BIT_INT] = int16_handler;
-  sjson_add_value[SJSON_32BIT_INT] = int32_handler;
-  sjson_add_value[SJSON_64BIT_INT] = int64_handler;
-}
+static sjson_retval_t (*sjson_add_value[SJSON_INT_MAX_INDEX])(
+    sjson_context_t *ctx, void *value) = {int8_handler, int16_handler,
+                                          int32_handler, int64_handler};
 
 sjson_retval_t sjson_add_integer(sjson_context_t *ctx, uint8_t *key,
                                  size_t key_len, void *value,
@@ -141,8 +135,6 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
 sjson_retval_t sjson_init(sjson_context_t *ctx, uint8_t *buf, size_t buf_size) {
   if (buf == NULL) return JSON_INVALID_BUFFER;
   if (buf_size == 0) return JSON_INVALID_BUFFER;
-
-  init_sjson_add_value();
 
   memset(buf, 0, buf_size);
   memset(ctx, 0, sizeof(sjson_context_t));
