@@ -10,7 +10,7 @@ int main(void) {
 
   uint8_t *key16 = "my_16_key";
   uint16_t value16 = 1616;
-  
+
   uint8_t *key32 = "my_32_key";
   uint32_t value32 = 32323232;
 

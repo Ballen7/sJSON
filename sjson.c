@@ -23,9 +23,10 @@ static sjson_retval_t sjson_add_key(sjson_context_t *ctx, uint8_t *key,
   return (space_used >= vacany) ? JSON_ERROR : JSON_SUCCESS;
 }
 
-sjson_retval_t (*sjson_add_value[SJSON_MAX])(sjson_context_t *ctx, void *value);
+static sjson_retval_t (*sjson_add_value[SJSON_MAX])(sjson_context_t *ctx,
+                                                    void *value);
 
-sjson_retval_t int8_handler(sjson_context_t *ctx, void *value) {
+static sjson_retval_t int8_handler(sjson_context_t *ctx, void *value) {
   size_t vacany;
   int space_used;
   uint8_t _val = (uint8_t) * (uint8_t *)value;
@@ -35,7 +36,7 @@ sjson_retval_t int8_handler(sjson_context_t *ctx, void *value) {
   return (space_used >= vacany) ? JSON_ERROR : JSON_SUCCESS;
 }
 
-sjson_retval_t int16_handler(sjson_context_t *ctx, void *value) {
+static sjson_retval_t int16_handler(sjson_context_t *ctx, void *value) {
   size_t vacany;
   int space_used;
   uint16_t _val = (uint16_t) * (uint16_t *)value;
@@ -45,7 +46,7 @@ sjson_retval_t int16_handler(sjson_context_t *ctx, void *value) {
   return (space_used >= vacany) ? JSON_ERROR : JSON_SUCCESS;
 }
 
-sjson_retval_t int32_handler(sjson_context_t *ctx, void *value) {
+static sjson_retval_t int32_handler(sjson_context_t *ctx, void *value) {
   size_t vacany;
   int space_used;
   uint32_t _val = (uint32_t) * (uint32_t *)value;
@@ -55,7 +56,7 @@ sjson_retval_t int32_handler(sjson_context_t *ctx, void *value) {
   return (space_used >= vacany) ? JSON_ERROR : JSON_SUCCESS;
 }
 
-sjson_retval_t int64_handler(sjson_context_t *ctx, void *value) {
+static sjson_retval_t int64_handler(sjson_context_t *ctx, void *value) {
   size_t vacany;
   int space_used;
   uint64_t _val = (uint64_t) * (uint64_t *)value;

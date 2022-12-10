@@ -8,6 +8,8 @@
 #include <string.h>
 
 #define SJSON_SNPRINTF(s, n, format, ...) snprintf(s, n, format, __VA_ARGS__)
+#define SJSON_TRUE (const uint8_t *const) "true"
+#define SJSON_FALSE (const uint8_t *const) "false"
 
 typedef enum {
   JSON_INIT = 0,
