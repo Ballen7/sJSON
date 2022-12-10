@@ -1,5 +1,5 @@
 # sJSON
-Static JSON creator that supports the following types
+A simple to use JSON creator with no dynamic allocation. Only supports the following types:
 * string
 * unsigned integers
 * boolean
