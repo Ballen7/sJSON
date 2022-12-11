@@ -3,8 +3,8 @@
 #define SJSON_WRITE_ADDRESS(ctx) ((char *)&ctx->pBuf[ctx->index])
 #define SJSON_AVAIABLE_SPACE(ctx) ((size_t)(ctx->buf_size - 1) - ctx->index)
 
-static const uint8_t *const SJSON_TRUE_STRING = "true";
-static const uint8_t *const SJSON_FALSE_STRING = "false";
+static const uint8_t *const SJSON_TRUE_STRING = (const uint8_t *)"true";
+static const uint8_t *const SJSON_FALSE_STRING = (const uint8_t *)"false";
 
 static sjson_retval_t sjson_valid_context(sjson_context_t *ctx) {
   return (ctx->pBuf == NULL || ctx->buf_size == 0 ||
@@ -59,7 +59,7 @@ static sjson_retval_t int64_handler(sjson_context_t *ctx, void *value) {
   int space_used;
   uint64_t _val = (uint64_t) * (uint64_t *)value;
   vacancy = SJSON_AVAIABLE_SPACE(ctx);
-  space_used = SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx), vacancy, "%u", _val);
+  space_used = SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx), vacancy, "%llu", _val);
   ctx->index += space_used;
   return (space_used >= vacancy) ? JSON_ERROR : JSON_SUCCESS;
 }
@@ -119,9 +119,9 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
 
   if (bool_val == SJSON_FALSE) pStr = SJSON_FALSE_STRING;
 
-  if (SJSON_AVAIABLE_SPACE(ctx) < strlen(pStr)) return JSON_ERROR;
-  memcpy(&ctx->pBuf[ctx->index], pStr, strlen(pStr));
-  ctx->index += strlen(pStr);
+  if (SJSON_AVAIABLE_SPACE(ctx) < strlen((const char *)pStr)) return JSON_ERROR;
+  memcpy(&ctx->pBuf[ctx->index], pStr, strlen((const char *)pStr));
+  ctx->index += strlen((const char *)pStr);
   ctx->state = JSON_ADD_CLOSING_BRACKET;
 
   return JSON_SUCCESS;

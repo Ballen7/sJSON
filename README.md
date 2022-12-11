@@ -3,7 +3,7 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
 * string
 * unsigned integers
 * boolean
-## How to use 
+## Example 
 ```c
 
  uint8_t buffer[32];
@@ -15,15 +15,21 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
  char *string_key = "string_key";
  char *my_string = "This is my string.";
 
+ char *bool_key = "bool_key";
+ sjson_boolean_t bool_val = SJSON_TRUE;
+
+
  sjson_init(&ctx, buffer, sizeof(buffer));
  sjson_add_integer(&ctx, value_key, strlen(value_key), &value, SJSON_16BIT_INT);
  sjson_add_string(&ctx, string_key, strlen(string_key), my_string, strlen(my_string));
+ sjson_add_boolean(&ctx, bool_key, strlen(bool_key), bool_val);
  sjson_complete(&ctx)
 ```
 Which outputs
 ```json
  {
 	"value_key": 4386,
-	"string_key": "This is my string."
+	"string_key": "This is my string.",
+	"bool_key": true
  }
 ```
