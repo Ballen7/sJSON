@@ -88,7 +88,6 @@ sjson_retval_t sjson_add_integer(sjson_context_t *ctx, uint8_t *key,
 sjson_retval_t sjson_add_string(sjson_context_t *ctx, uint8_t *key,
                                 size_t key_len, void *value, size_t value_len) {
   size_t vacancy;
-  int space_used;
 
   if (JSON_SUCCESS != sjson_valid_context(ctx)) return JSON_ERROR;
   if (ctx->state == JSON_ADD_CLOSING_BRACKET && SJSON_AVAIABLE_SPACE(ctx) > 0)
@@ -96,11 +95,12 @@ sjson_retval_t sjson_add_string(sjson_context_t *ctx, uint8_t *key,
 
   ctx->state = JSON_IN_PROGRESS;
   if (JSON_SUCCESS != sjson_add_key(ctx, key, key_len)) return JSON_ERROR;
-  vacancy = SJSON_AVAIABLE_SPACE(ctx);
-  space_used = SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx), vacancy, "\"%*s\"",
-                              value_len, (uint8_t *)value);
-  ctx->index += space_used;
-  if (space_used >= vacancy) return JSON_ERROR;
+
+  if (SJSON_AVAIABLE_SPACE(ctx) < value_len + 2) return JSON_ERROR;
+  ctx->pBuf[ctx->index++] = '"';
+  memcpy(&ctx->pBuf[ctx->index], value, value_len);
+  ctx->index += value_len;
+  ctx->pBuf[ctx->index++] = '"';
   ctx->state = JSON_ADD_CLOSING_BRACKET;
 
   return JSON_SUCCESS;
