@@ -87,8 +87,6 @@ sjson_retval_t sjson_add_integer(sjson_context_t *ctx, uint8_t *key,
 
 sjson_retval_t sjson_add_string(sjson_context_t *ctx, uint8_t *key,
                                 size_t key_len, void *value, size_t value_len) {
-  size_t vacancy;
-
   if (JSON_SUCCESS != sjson_valid_context(ctx)) return JSON_ERROR;
   if (ctx->state == JSON_ADD_CLOSING_BRACKET && SJSON_AVAIABLE_SPACE(ctx) > 0)
     ctx->pBuf[ctx->index++] = ',';
@@ -108,7 +106,6 @@ sjson_retval_t sjson_add_string(sjson_context_t *ctx, uint8_t *key,
 
 sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
                                  size_t key_len, sjson_boolean_t bool_val) {
-  size_t vacancy;
   const uint8_t *pStr = SJSON_TRUE_STRING;
 
   if (JSON_SUCCESS != sjson_valid_context(ctx)) return JSON_ERROR;
@@ -122,9 +119,7 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
 
   if (bool_val == SJSON_FALSE) pStr = SJSON_FALSE_STRING;
 
-  vacancy = SJSON_AVAIABLE_SPACE(ctx);
-  if (vacancy < strlen(pStr)) return JSON_ERROR;
-
+  if (SJSON_AVAIABLE_SPACE(ctx) < strlen(pStr)) return JSON_ERROR;
   memcpy(&ctx->pBuf[ctx->index], pStr, strlen(pStr));
   ctx->index += strlen(pStr);
   ctx->state = JSON_ADD_CLOSING_BRACKET;
