@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SJSON_LOGGING 1
+#define SJSON_LOGGING 0
 
 #if (SJSON_LOGGING == 1)
 #define sjson_log(format, ...) printf(format, __VA_ARGS__)
