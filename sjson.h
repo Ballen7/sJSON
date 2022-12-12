@@ -25,9 +25,9 @@ typedef enum {
 } sjson_state_t;
 
 typedef enum {
-  JSON_SUCCESS = 0,
-  JSON_ERROR,
-  JSON_INVALID_BUFFER
+  SJSON_SUCCESS = 0,
+  SJSON_ERROR,
+  SJSON_INVALID_BUFFER
 } sjson_retval_t;
 
 typedef enum {
