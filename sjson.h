@@ -17,7 +17,7 @@
 #define SJSON_SNPRINTF(s, n, format, ...) snprintf(s, n, format, __VA_ARGS__)
 
 /* encloses generated JSON string in curly brackets */
-#define OBJECT_ENCLOSE_FLAG 0
+#define OBJECT_ENCLOSE_FLAG 1
 
 typedef enum {
   JSON_INIT = 0,
