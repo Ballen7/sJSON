@@ -13,8 +13,7 @@ static sjson_retval_t sjson_valid_context(sjson_context_t *ctx) {
   if (ctx->state != SJSON_NEXT_KEY_PAIR && ctx->state != SJSON_START)
     return SJSON_ERROR;
 
-  if (ctx->state == SJSON_NEXT_KEY_PAIR && SJSON_AVAIABLE_SPACE(ctx))
-    ctx->pBuf[ctx->index++] = ',';
+  if (ctx->state == SJSON_NEXT_KEY_PAIR) ctx->pBuf[ctx->index++] = ',';
 
   return SJSON_SUCCESS;
 }
@@ -33,38 +32,30 @@ static sjson_retval_t sjson_add_key(sjson_context_t *ctx, uint8_t *key,
 }
 
 static sjson_retval_t int8_handler(sjson_context_t *ctx, void *value) {
-  int32_t space_used;
   uint8_t _val = (uint8_t) * (uint8_t *)value;
-  space_used = (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
-                                       SJSON_AVAIABLE_SPACE(ctx), "%u", _val);
-  ctx->index += space_used;
+  ctx->index += (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
+                                        SJSON_AVAIABLE_SPACE(ctx), "%u", _val);
   return (ctx->index > ctx->buf_size) ? SJSON_ERROR : SJSON_SUCCESS;
 }
 
 static sjson_retval_t int16_handler(sjson_context_t *ctx, void *value) {
-  int32_t space_used;
   uint16_t _val = (uint16_t) * (uint16_t *)value;
-  space_used = (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
-                                       SJSON_AVAIABLE_SPACE(ctx), "%u", _val);
-  ctx->index += space_used;
+  ctx->index += (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
+                                        SJSON_AVAIABLE_SPACE(ctx), "%u", _val);
   return (ctx->index > ctx->buf_size) ? SJSON_ERROR : SJSON_SUCCESS;
 }
 
 static sjson_retval_t int32_handler(sjson_context_t *ctx, void *value) {
-  int32_t space_used;
   uint32_t _val = (uint32_t) * (uint32_t *)value;
-  space_used = (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
-                                       SJSON_AVAIABLE_SPACE(ctx), "%u", _val);
-  ctx->index += space_used;
+  ctx->index += (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
+                                        SJSON_AVAIABLE_SPACE(ctx), "%u", _val);
   return (ctx->index > ctx->buf_size) ? SJSON_ERROR : SJSON_SUCCESS;
 }
 
 static sjson_retval_t int64_handler(sjson_context_t *ctx, void *value) {
-  int32_t space_used;
   uint64_t _val = (uint64_t) * (uint64_t *)value;
-  space_used = (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
-                                       SJSON_AVAIABLE_SPACE(ctx), "%lu", _val);
-  ctx->index += space_used;
+  ctx->index += (int32_t)SJSON_SNPRINTF(SJSON_WRITE_ADDRESS(ctx),
+                                        SJSON_AVAIABLE_SPACE(ctx), "%lu", _val);
   return (ctx->index > ctx->buf_size) ? SJSON_ERROR : SJSON_SUCCESS;
 }
 
