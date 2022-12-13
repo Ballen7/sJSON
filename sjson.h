@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SJSON_LOGGING 1
+#define SJSON_LOGGING 0
 
 #if (SJSON_LOGGING == 1)
 #define sjson_log(format, ...) printf(format, __VA_ARGS__)
@@ -16,15 +16,12 @@
 
 #define SJSON_SNPRINTF(s, n, format, ...) snprintf(s, n, format, __VA_ARGS__)
 
-/* encloses generated JSON string in curly brackets */
-#define OBJECT_ENCLOSE_FLAG 1
-
 typedef enum {
-  JSON_INIT = 0,
-  JSON_START,
-  JSON_IN_PROGRESS,
-  JSON_NEXT_KEY_PAIR,
-  JSON_COMPLETE,
+  SJSON_INIT = 0,
+  SJSON_NEXT_KEY_PAIR,
+  SJSON_START,
+  SJSON_IN_PROGRESS,
+  SJSON_COMPLETE,
 } sjson_state_t;
 
 typedef enum {
@@ -53,7 +50,6 @@ typedef struct {
   uint8_t *pBuf;
   size_t buf_size;
   size_t index;
-  size_t key_pair_count;
   sjson_state_t state;
 } sjson_context_t;
 

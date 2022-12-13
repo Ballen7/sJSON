@@ -6,7 +6,7 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
 ## Example 
 ```c
 
- uint8_t buffer[32];
+ uint8_t buffer[128];
  sjson_context_t ctx;
 
  char *value_key = "value_key";
