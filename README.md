@@ -3,10 +3,10 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
 * string
 * unsigned integers
 * boolean
+* JSON Objects
 ## Example 
 ```c
-
- uint8_t buffer[128];
+ uint8_t buffer[256];
  sjson_context_t ctx;
 
  char *value_key = "value_key";
@@ -18,7 +18,6 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
  char *bool_key = "bool_key";
  sjson_boolean_t bool_val = SJSON_TRUE;
 
-
  sjson_init(&ctx, buffer, sizeof(buffer));
  sjson_add_integer(&ctx, value_key, strlen(value_key), &value, SJSON_16BIT_INT);
  sjson_add_string(&ctx, string_key, strlen(string_key), my_string, strlen(my_string));
@@ -28,8 +27,32 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
 Which outputs
 ```json
  {
-	"value_key": 4386,
-	"string_key": "This is my string.",
-	"bool_key": true
+  "value_key": 4386,
+  "string_key": "This is my string.",
+  "bool_key": true
  }
+```
+To create a JSON object one could do,
+```c
+ uint8_t buffer2[128];
+ sjson_context_t ctx2;
+
+ char *json_obj_key = "obj_key";
+ uint16_t value = 0x1122;
+
+ sjson_init(&ctx2, buffer2, sizeof(buffer2));
+          /* ctx.pBuf is the value from the previous example */
+ sjson_add_object(&ctx2, json_obj_key, strlen(json_obj_key), ctx.pBuf, strlen(ctx.pBuf));
+ sjson_complete(&ctx2)
+
+```
+which outputs
+```json
+{
+  "obj_key": {
+    "value_key": 4386,
+    "string_key": "This is my string.",
+    "bool_key": true
+  }
+}
 ```

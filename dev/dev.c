@@ -4,8 +4,8 @@
 
 int main(void) {
   sjson_retval_t ret;
-  uint8_t buffer[256];
-  sjson_context_t ctx;
+  uint8_t buffer[141], buffer2[256];
+  sjson_context_t ctx, ctx2;
 
   const char *key8 = "my_key";
   uint8_t value8 = 88;
@@ -46,6 +46,11 @@ int main(void) {
 
   if(SJSON_SUCCESS != sjson_complete(&ctx))
     assert(0);
+
+  sjson_init(&ctx2, buffer2, sizeof(buffer2));
+  sjson_add_object(&ctx2, (uint8_t *)keyString, strlen(keyString),
+                   (void *)ctx.pBuf, strlen(ctx.pBuf));
+  sjson_complete(&ctx2);
 
   return 1;
 }

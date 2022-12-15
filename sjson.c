@@ -1,12 +1,12 @@
 #include "sjson.h"
 
 #define SJSON_WRITE_ADDRESS(ctx) ((char *)&ctx->pBuf[ctx->index])
-#define SJSON_AVAIABLE_SPACE(ctx) ((size_t)(ctx->buf_size - 1) - ctx->index)
+#define SJSON_AVAIABLE_SPACE(ctx) ((size_t)(ctx->buf_size - ctx->index))
 
 static const uint8_t *const SJSON_TRUE_STRING = (const uint8_t *)"true";
 static const uint8_t *const SJSON_FALSE_STRING = (const uint8_t *)"false";
 
-static sjson_retval_t sjson_valid_context(sjson_context_t *ctx) {
+static sjson_retval_t sjson_initate_keypair(sjson_context_t *ctx) {
   if (ctx->pBuf == NULL) return SJSON_ERROR;
   if (ctx->buf_size == 0) return SJSON_ERROR;
   if (SJSON_AVAIABLE_SPACE(ctx) == 0) return SJSON_ERROR;
@@ -67,7 +67,7 @@ sjson_retval_t sjson_add_integer(sjson_context_t *ctx, uint8_t *key,
                                  size_t key_len, void *value,
                                  sjson_integer_size_t type) {
   if (type > SJSON_INT_MAX_INDEX - 1) return SJSON_ERROR;
-  if (SJSON_SUCCESS != sjson_valid_context(ctx)) return SJSON_ERROR;
+  if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
 
   ctx->state = SJSON_IN_PROGRESS;
   if (SJSON_SUCCESS != sjson_add_key(ctx, key, key_len)) return SJSON_ERROR;
@@ -79,7 +79,7 @@ sjson_retval_t sjson_add_integer(sjson_context_t *ctx, uint8_t *key,
 
 sjson_retval_t sjson_add_string(sjson_context_t *ctx, uint8_t *key,
                                 size_t key_len, void *value, size_t value_len) {
-  if (SJSON_SUCCESS != sjson_valid_context(ctx)) return SJSON_ERROR;
+  if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
 
   ctx->state = SJSON_IN_PROGRESS;
 
@@ -101,7 +101,7 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
   const uint8_t *pStr;
 
   if (bool_val > SJSON_BOOLEAN_MAX - 1) return SJSON_ERROR;
-  if (SJSON_SUCCESS != sjson_valid_context(ctx)) return SJSON_ERROR;
+  if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
 
   ctx->state = SJSON_IN_PROGRESS;
   if (SJSON_SUCCESS != sjson_add_key(ctx, key, key_len)) return SJSON_ERROR;
@@ -109,7 +109,7 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
     pStr = SJSON_TRUE_STRING;
   else
     pStr = SJSON_FALSE_STRING;
-  if (SJSON_AVAIABLE_SPACE(ctx) < strlen((const char *)pStr) + 1)
+  if (SJSON_AVAIABLE_SPACE(ctx) < strlen((const char *)pStr))
     return SJSON_ERROR;
 
   memcpy(&ctx->pBuf[ctx->index], pStr, strlen((const char *)pStr));
@@ -119,17 +119,33 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
   return SJSON_SUCCESS;
 }
 
+sjson_retval_t sjson_add_object(sjson_context_t *ctx, uint8_t *key,
+                                size_t key_len, void *value, size_t value_len) {
+  if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
+
+  ctx->state = SJSON_IN_PROGRESS;
+
+  if (SJSON_SUCCESS != sjson_add_key(ctx, key, key_len)) return SJSON_ERROR;
+  if (SJSON_AVAIABLE_SPACE(ctx) < value_len) return SJSON_ERROR;
+
+  memcpy(&ctx->pBuf[ctx->index], value, value_len);
+  ctx->index += value_len;
+
+  ctx->state = SJSON_NEXT_KEY_PAIR;
+
+  return SJSON_SUCCESS;
+}
+
 sjson_retval_t sjson_init(sjson_context_t *ctx, uint8_t *buf, size_t buf_size) {
   if (buf == NULL) return SJSON_INVALID_BUFFER;
   if (buf_size == 0) return SJSON_INVALID_BUFFER;
 
-  memset(buf, 0, buf_size);
   memset(ctx, 0, sizeof(sjson_context_t));
   ctx->pBuf = buf;
   ctx->buf_size = buf_size;
 
   ctx->state = SJSON_START;
-  if (SJSON_SUCCESS != sjson_valid_context(ctx)) return SJSON_ERROR;
+  if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
   ctx->pBuf[ctx->index++] = '{';
 
   return SJSON_SUCCESS;
@@ -137,10 +153,12 @@ sjson_retval_t sjson_init(sjson_context_t *ctx, uint8_t *buf, size_t buf_size) {
 
 sjson_retval_t sjson_complete(sjson_context_t *ctx) {
   if (ctx->state != SJSON_NEXT_KEY_PAIR) return SJSON_ERROR;
-  if (SJSON_AVAIABLE_SPACE(ctx) < 1) return SJSON_ERROR;
+  if (SJSON_AVAIABLE_SPACE(ctx) < 1 + 1) return SJSON_ERROR;
 
   ctx->pBuf[ctx->index++] = '}';
+  ctx->pBuf[ctx->index++] = 0;
   ctx->state = SJSON_COMPLETE;
+
   sjson_log(">>%s<<\n\n", ctx->pBuf);
 
   return SJSON_SUCCESS;
