@@ -22,7 +22,7 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
  sjson_add_integer(&ctx, value_key, strlen(value_key), &value, SJSON_16BIT_INT);
  sjson_add_string(&ctx, string_key, strlen(string_key), my_string, strlen(my_string));
  sjson_add_boolean(&ctx, bool_key, strlen(bool_key), bool_val);
- sjson_complete(&ctx)
+ sjson_complete(&ctx);
 ```
 Which outputs
 ```json
@@ -34,16 +34,15 @@ Which outputs
 ```
 To create a JSON object one could do,
 ```c
- uint8_t buffer2[128];
+ uint8_t buffer2[256];
  sjson_context_t ctx2;
 
  char *json_obj_key = "obj_key";
- uint16_t value = 0x1122;
+ char *json_obj = ctx.pBuf; /* from example above */
 
  sjson_init(&ctx2, buffer2, sizeof(buffer2));
-          /* ctx.pBuf is the value from the previous example */
- sjson_add_object(&ctx2, json_obj_key, strlen(json_obj_key), ctx.pBuf, strlen(ctx.pBuf));
- sjson_complete(&ctx2)
+ sjson_add_object(&ctx2, json_obj_key, strlen(json_obj_key), json_obj, strlen(json_obj));
+ sjson_complete(&ctx2);
 
 ```
 which outputs
