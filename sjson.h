@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SJSON_LOGGING 0
+#define SJSON_LOGGING 1
 
 #if (SJSON_LOGGING == 1)
 #define sjson_log(format, ...) printf(format, __VA_ARGS__)
@@ -68,6 +68,6 @@ sjson_retval_t sjson_add_boolean(sjson_context_t *ctx, uint8_t *key,
 sjson_retval_t sjson_add_object(sjson_context_t *ctx, uint8_t *key,
                                 size_t key_len, void *value, size_t value_len);
 
-sjson_retval_t sjson_complete(sjson_context_t *ctx);
+sjson_retval_t sjson_close(sjson_context_t *ctx);
 
 #endif /* _H_SJSON */

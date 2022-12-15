@@ -1,5 +1,5 @@
 # sJSON
-A simple to use JSON creator with no dynamic allocation. Only supports the following types:
+A simple to use NULL terminated JSON creator with no dynamic allocation. Only supports the following types:
 * string
 * unsigned integers
 * boolean
@@ -22,7 +22,7 @@ A simple to use JSON creator with no dynamic allocation. Only supports the follo
  sjson_add_integer(&ctx, value_key, strlen(value_key), &value, SJSON_16BIT_INT);
  sjson_add_string(&ctx, string_key, strlen(string_key), my_string, strlen(my_string));
  sjson_add_boolean(&ctx, bool_key, strlen(bool_key), bool_val);
- sjson_complete(&ctx);
+ sjson_close(&ctx);
 ```
 Which outputs
 ```json
@@ -42,7 +42,7 @@ To create a JSON object one could do,
 
  sjson_init(&ctx2, buffer2, sizeof(buffer2));
  sjson_add_object(&ctx2, json_obj_key, strlen(json_obj_key), json_obj, strlen(json_obj));
- sjson_complete(&ctx2);
+ sjson_close(&ctx2);
 
 ```
 which outputs

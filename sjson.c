@@ -145,13 +145,13 @@ sjson_retval_t sjson_init(sjson_context_t *ctx, uint8_t *buf, size_t buf_size) {
   ctx->buf_size = buf_size;
 
   ctx->state = SJSON_START;
-  if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
+  //if (SJSON_SUCCESS != sjson_initate_keypair(ctx)) return SJSON_ERROR;
   ctx->pBuf[ctx->index++] = '{';
 
   return SJSON_SUCCESS;
 }
 
-sjson_retval_t sjson_complete(sjson_context_t *ctx) {
+sjson_retval_t sjson_close(sjson_context_t *ctx) {
   if (ctx->state != SJSON_NEXT_KEY_PAIR) return SJSON_ERROR;
   if (SJSON_AVAIABLE_SPACE(ctx) < 1 + 1) return SJSON_ERROR;
 
