@@ -1,4 +1,4 @@
-./dev/build
+dev/build
 #CMake
 CMakeLists.txt.user
 CMakeCache.txt
