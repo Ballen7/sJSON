@@ -1,6 +1,6 @@
-#include "sjson.h"
-
 #include <assert.h>
+
+#include "sjson.h"
 
 int main(void) {
   sjson_retval_t ret;
@@ -44,13 +44,13 @@ int main(void) {
 
   sjson_add_boolean(&ctx, (uint8_t *)keyBool, strlen(keyBool), bool_val);
 
-  if(SJSON_SUCCESS != sjson_close(&ctx))
-    assert(0);
+  if (SJSON_SUCCESS != sjson_close(&ctx)) assert(0);
 
   sjson_init(&ctx2, buffer2, sizeof(buffer2));
   sjson_add_object(&ctx2, (uint8_t *)keyString, strlen(keyString),
                    (void *)ctx.pBuf, strlen(ctx.pBuf));
-  sjson_close(&ctx2);
 
-  return 1;
+  if (SJSON_SUCCESS != sjson_close(&ctx2)) assert(0);
+
+  return 0;
 }
