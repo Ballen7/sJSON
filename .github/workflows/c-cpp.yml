@@ -14,7 +14,5 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: cmake and build
-      run:  cd dev && cmake -DSJSON_LOGGING=1 -B build 
-            cd build && make
-            ./sjson-dev
+      run:  cd dev && cmake -B build && cd build && make && ./sjson-dev
 
