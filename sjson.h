@@ -7,7 +7,7 @@
 #include <string.h>
 
 #ifndef SJSON_LOGGING
-#define SJSON_LOGGING 0
+#define SJSON_LOGGING 1
 #endif
 
 #if (SJSON_LOGGING == 1)
